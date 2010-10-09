@@ -1,0 +1,22 @@
+With this fix you can have a native prompt using PhoneGap.
+
+Substitute the current Notification.m in your project with this one (the whole file or just copy&paste the contents).
+
+Add the following function anywhere in your js:
+
+function nativePrompt(msg,tit,but) {
+	var options = {};
+	options.title = tit;
+	options.buttonLabel = but;
+	PhoneGap.exec('Notification.prompt', msg, options);
+}
+
+The call it like such:
+nativePrompt("This is my message", "This is my title", "Oky Dokie");
+
+
+If you leave the message arg empty the respective line will be deleted (no trailing empty spaces).
+If you leave the title arg empty "Prompt" will be used.
+If you leave the button arg empty "OK" will be used.
+
+If you wish to leave the message empty you should still use "" (there should always be 3 arguments).
