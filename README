@@ -1,4 +1,9 @@
-With this fix you can have a native prompt using PhoneGap.
+Notification.m **
+*****************
+
+*****************************************
+
+Support for native prompt
 
 Substitute the current Notification.m in your project with this one (the whole file or just copy&paste the contents).
 
@@ -20,3 +25,25 @@ If you leave the title arg empty "Prompt" will be used.
 If you leave the button arg empty "OK" will be used.
 
 If you wish to leave the message empty you should still use "" (there should always be 3 arguments).
+
+
+*****************************************
+Support for image in native alert pop up.
+
+Substitute the current Notification.m in your project with this one (the whole file or just copy&paste the contents).
+
+Add the following function anywhere in your js:
+
+function alertWithImg(msg,tit,but1,but2,img) {
+	var options = {};
+	options.title = tit;
+	options.buttonLabel = but1+","+but2;
+	options.imgPath = img;
+	PhoneGap.exec('Notification.alert', msg, options);
+}
+
+The call it like such:
+alertWithImg("This is my message", "This is my title", "Oky Dokie","NoWay","icon.png");
+
+Remember to add your image to Resources folder.
+Obviously it's a little hackie therefore you might have to play around with the image location and text in the popup.

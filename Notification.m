@@ -19,18 +19,23 @@
 	NSString* message = [arguments objectAtIndex:0];
 	NSString* title   = [options objectForKey:@"title"];
 	NSString* button  = [options objectForKey:@"buttonLabel"];
-	
+	NSString* imgPath  = [options objectForKey:@"imgPath"];
 	if (!title)
         title = @"Alert";
 	if (!button)
         button = @"OK";
-	
 	UIAlertView *alertView = [[UIAlertView alloc]
 							  initWithTitle:title
 							  message:message 
 							  delegate:self 
 							  cancelButtonTitle:nil 
 							  otherButtonTitles:nil];
+	if (imgPath) {
+		CGRect myImageRect = CGRectMake(15.0f, 10.0f, 50.0f, 50.0f);
+		UIImageView *myImage = [[UIImageView alloc] initWithFrame:myImageRect];
+		[myImage setImage:[UIImage imageNamed:imgPath]];
+		[alertView addSubview:myImage];
+	}
 	
 	NSArray* labels = [ button componentsSeparatedByString:@","];
 	
