@@ -26,9 +26,9 @@
         button = @"OK";
 	UIAlertView *alertView = [[UIAlertView alloc]
 							  initWithTitle:title
-							  message:message 
-							  delegate:self 
-							  cancelButtonTitle:nil 
+							  message:message
+							  delegate:self
+							  cancelButtonTitle:nil
 							  otherButtonTitles:nil];
 	if (imgPath) {
 		CGRect myImageRect = CGRectMake(15.0f, 10.0f, 50.0f, 50.0f);
@@ -36,16 +36,16 @@
 		[myImage setImage:[UIImage imageNamed:imgPath]];
 		[alertView addSubview:myImage];
 	}
-	
+
 	NSArray* labels = [ button componentsSeparatedByString:@","];
-	
+
 	int count = [ labels count ];
-	
+
 	for(int n = 0; n < count; n++)
 	{
 		[ alertView addButtonWithTitle:[labels objectAtIndex:n]];
 	}
-	
+
 	[alertView show];
 	[alertView release];
 }
@@ -56,23 +56,23 @@
 	NSString* message = [arguments objectAtIndex:0];
 	NSString* title   = [options objectForKey:@"title"];
 	NSString* button  = [options objectForKey:@"buttonLabel"];
-    
+
     if (!title)
         title = @"Prompt";
     if (!button)
         button = @"OK";
-    
+
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:button otherButtonTitles: nil];
 	[alert addTextFieldWithValue:@"" label:@""];
 	[alert show];
 	[alert release];
-	
+
 	//myTextField.secureTextEntry = YES;
 
 }
 
 /**
- Callback invoked when an alert dialog's buttons are clicked.   
+ Callback invoked when an alert dialog's buttons are clicked.
  Passes the index + label back to JS
  */
 
@@ -80,10 +80,10 @@
 {
     NSString *buttonLabel = [alertView buttonTitleAtIndex:buttonIndex];
 
-	NSString * jsCallBack = [NSString stringWithFormat:@"navigator.notification._alertCallback(%d,\"%@\");", buttonIndex, buttonLabel];    
+	NSString * jsCallBack = [NSString stringWithFormat:@"navigator.notification._alertCallback(%d,\"%@\");", buttonIndex, buttonLabel];
     [webView stringByEvaluatingJavaScriptFromString:jsCallBack];
 }
- 
+
 
 - (void)activityStart:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
 {
@@ -112,7 +112,7 @@
 	if (self.loadingView != nil) {
 		return;
 	}
-	
+
 	CGFloat strokeOpacity, backgroundOpacity;
 	//CGFloat boxLength = [LoadingView defaultBoxLength];
 	CGFloat boxLength = 240;
@@ -120,10 +120,10 @@
 	BOOL bounceAnimation = NO;
 	NSString* colorCSSString;
 	NSString* labelText;
-	
+
 	strokeOpacity = [[options objectForKey:@"strokeOpacity"] floatValue];
 	backgroundOpacity = [[options objectForKey:@"backgroundOpacity"] floatValue];
-	
+
 	id fullScreenValue = [options objectForKey:@"fullScreen"];
 	if (fullScreenValue != nil)
 	{
@@ -138,24 +138,24 @@
 	{
 		bounceAnimation = [bounceAnimationValue boolValue];
 	}
-	
+
 	colorCSSString = [options objectForKey:@"strokeColor"];
 	labelText = [options objectForKey:@"labelText"];
-	
+
 	if (!labelText) {
 		labelText = [LoadingView defaultLabelText];
 	}
-	
+
 	UIColor* strokeColor = [LoadingView defaultStrokeColor];
-	
+
 	if (strokeOpacity <= 0) {
 		strokeOpacity = [LoadingView defaultStrokeOpacity];
-	} 
+	}
 
 	if (backgroundOpacity <= 0) {
 		backgroundOpacity = [LoadingView defaultBackgroundOpacity];
-	} 
-	
+	}
+
 	if (colorCSSString) {
 		UIColor* tmp = [UIColor colorWithName:colorCSSString];
 		if (tmp) {
@@ -166,18 +166,18 @@
 				strokeColor = tmp;
 			}
 		}
-	} 
-	
-	self.loadingView = [LoadingView loadingViewInView:[super appViewController].view strokeOpacity:strokeOpacity 
-									backgroundOpacity:backgroundOpacity 
-										  strokeColor:strokeColor fullScreen:fullScreen labelText:labelText 
+	}
+
+	self.loadingView = [LoadingView loadingViewInView:[super appViewController].view strokeOpacity:strokeOpacity
+									backgroundOpacity:backgroundOpacity
+										  strokeColor:strokeColor fullScreen:fullScreen labelText:labelText
 									  bounceAnimation:bounceAnimation boxLength:boxLength];
-	
+
 	NSRange minMaxDuration = NSMakeRange(2, 120);// 1 hour max? :)
 	NSString* durationKey = @"duration";
 	// the view will be shown for a minimum of this value if durationKey is not set
 	self.loadingView.minDuration = [options integerValueForKey:@"minDuration" defaultValue:minMaxDuration.location withRange:minMaxDuration];
-	
+
 	// if there's a duration set, we set a timer to close the view
 	if ([options valueForKey:durationKey]) {
 		NSTimeInterval duration = [options integerValueForKey:durationKey defaultValue:minMaxDuration.location withRange:minMaxDuration];
@@ -187,14 +187,14 @@
 
 - (void)loadingStop:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
 {
-	
-	if (self.loadingView != nil) 
+
+	if (self.loadingView != nil)
 	{
 		NSLog(@"Loading stop");
 		NSTimeInterval diff = [[NSDate date] timeIntervalSinceDate:self.loadingView.timestamp] - self.loadingView.minDuration;
-		
-		
-		
+
+
+
 		if (diff >= 0) {
 			[self.loadingView removeView]; // the superview will release (see removeView doc), so no worries for below
 			self.loadingView = nil;
